@@ -1,29 +1,27 @@
-while True:
-    # 사용자 입력 받기
-    numbers_str = input("숫자를 쉼표로 구분하여 입력: ")
+input_num_list = input("숫자들을 쉼표로 구분하여 입력하세요: ")
 
-    # 문자열을 숫자 리스트로 변환
-    numbers = numbers_str.split(',')
+num_list = input_num_list.split(",")
+
+sum = 0
+output_list = []
+over_100_flag = False
+
+for num_str in num_list:
+    num = int(num_str)
+    sum += num
+    output_list.append(num)
     
-    # 초기화 값
-    count = 0
-
-    # 정수형으로 형변환하여 총합 계산
-    for num_str in numbers:
-        num = int(num_str)
-        count += num
-
-        if count > 100:
-            print("총합이 100을 초과하였습니다..")
-            print("현재까지의 입력값들:", end=" ")
-            print(*numbers, sep=", ", end="\n")
-            print("현재까지의 총합", count)
-            break
     
-    # 100 초과하지 않을 경우 반복
-    if count <= 100:
-        print("총합이 100을 초과하지 않았습니다.")
-        print("입력된 모든 숫자들:", end=" ")
-        print(*numbers, sep=", ", end="\n")
-        print("최종 총합", count)
-    # 100 초과했을 경우 탈출
+    if sum > 100:
+        over_100_flag = True # break가 동작했는지 안했는지 확인 식
+        break
+    
+if over_100_flag:
+    print("총합이 100을 초과하였습니다.")
+    print("현재까지의 입력값들: ", output_list)
+    print("현재까지의 총합: ", sum)
+else:
+    print("총합이 100을 초과하지 않았습니다.")
+    print("입력된 모든 숫자들: ",output_list)
+    print("최총 총합: ", sum)
+
