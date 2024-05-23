@@ -58,20 +58,19 @@ while True:
     print(f"{count + 1}번째 시도, 아래의 단어를 구성하는 알파벳 한 개 입력하세요.")
     print(blind_random_list)
     user_input = input("입력")
-    if '_'  in blind_random_word:
-        print()
-        for index in range(len(random_num_list)):
-            if user_input == random_num_list[index]:
-                blind_random_word[index] = user_input
-                count += 1
-                print("입력한 알파벳 단어 내 포함 : 개 입니다.")
-                break
-    # 없으면 없음 메시지 출력
-            else:
-                print("단어 내 포함되지 않은 알파벳입니다.")
-                count += 1
-# 모두 맞출 경우 게임 종료. 종료시 시도 횟수 출력  
-    else:
+    
+    for index in range(len(random_num_list)):
+        if user_input == random_num_list[index]:
+            blind_random_word[index] = user_input
+            count += 1
+            print("입력한 알파벳 단어 내 포함 : 개 입니다.")
+            break
+# 없으면 없음 메시지 출력
+        else:
+            print("단어 내 포함되지 않은 알파벳입니다.")
+            count += 1
+# 모두 맞출 경우 게임 종료. 종료시 시도 횟수 출력
+    if '_' not in blind_random_word:
         print(f"Clear - 선택한 단어: {random_word}. 총 시도 횟수: {count}")
         break
 
