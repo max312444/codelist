@@ -6,3 +6,4 @@ for i in range(0, 10):
     # 반복 할때 마다 10씩 감소
     start_num -= 10
     print(start_num)
+    
