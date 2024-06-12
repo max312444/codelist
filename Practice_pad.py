@@ -1,62 +1,65 @@
 import random
 
-def get_random_list(random_value, start_value, end_value):
-    
-    random_list = []
-    
-    randcom_count = 0
-    
-    while randcom_count < random_value:
-        
-        random_choice = random.randint(start_value, end_value)
-        
-        found_value = False
-        
-        for index in range(randcom_count):
-            if random_list[index] == random_choice:
-                found_value = True
-                break
-        if not found_value:
-            random_list.append(random_choice)
-            randcom_count += 1
-            
-    return random_list
-            
-com_random_list = get_random_list(3, 1, 10)
+# 단어 입력
+list_word = []
 
-print("컴퓨터 선택: ",com_random_list)
+for index in range(3):
+    while True:
+        input_value = input("단어 입력: ")
 
-count_game = 0
-count_strike_out = 0
+        if 5 <= len(input_value) <= 20:
+            list_word.append(input_value)
+            break
+    
+        print("5이상 20이하 단어 입력")
 
-while True:
-    count_strike = 0
-    count_ball = 0
+# 단어 선택
+word_selected = list(list_word[random.randint(0, 2)])
+word_printed = word_selected[:]
+
+print("선택 단어: ", word_printed)
+# 단어 블라인드 처리
+cha_num_word = len(word_selected)
+
+blind_num_word = cha_num_word / 2
+
+if blind_num_word > cha_num_word // 2:
+    blind_num_word += 1
     
-    count_game += 1
-    print("사용자 입력: ")
-    user_input = [int(input()) for _ in range(3)]
+blind_num_word = int(blind_num_word)
+
+list_blind_index = [value for value in range(0, cha_num_word)]
+
+for index in range(0, cha_num_word - blind_num_word):
+    del list_blind_index[random.randint(0, len(list_blind_index) - 1)]
     
-    for i in range(3):
-        for j in range(3):
-            if com_random_list[i] == user_input[j]:
-                if i == j:
-                    count_strike += 1
-                else:
-                    count_ball += 1
-                
-                break
-    if count_strike == 0 and count_ball == 0:
-        count_strike_out += 1
-        print("스트라이크 아웃")
+for index in list_blind_index:
+    word_printed[index] = "_"
+
+# 게임 시작
+count = 0
+
+while len(list_blind_index) > 0:
+    print(word_printed)
+# 알파벳 입력
+    input_value = input("글자 입력: ")
+    count += 1
+    found_index_list = []
+    if input_value in word_selected:
+        for index in list_blind_index:
+            if word_selected[index] == input_value:
+                word_printed[index] = input_value
+                found_index_list.append(index)
     else:
-        print("strike: ", count_strike, "ball: ", count_ball)
+        print("단어 없음")
         
-    if count_game >= 5 or count_strike_out >= 2:
-        msg = "시도 횟수 5회 이상" if count_game >= 5 else "스트라이크 아웃 2회 이상"
-        print(msg, "\t게임 종료")
-        break
-        
-    if count_strike >= 3:
-        print("승리\t게임 종료")
-        break
+    for f_index in list_blind_index:
+        list_blind_index.remove(f_index)
+    print(f"시도 횟수 {count}번")
+print("완성된 단어: ", word_printed)
+
+# blind해제
+
+# 게임종료
+
+# 결과 출력
