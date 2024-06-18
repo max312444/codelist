@@ -305,12 +305,34 @@
 # foo(test = 2, king = 3, lion = 4) # 1
 
 
-def foo(arg_a, arg_b, arg_c, arg_d, arg_e):
-    print(arg_a, arg_b, arg_c, arg_d, arg_e)
+# def foo(arg_a, arg_b, arg_c, arg_d, arg_e):
+#     print(arg_a, arg_b, arg_c, arg_d, arg_e)
     
-# foo (1,2,3,4,5)
+# # foo (1,2,3,4,5)
 
-arg_list = [value for value in range(1, 6)]
-arg_list = [1,2,3,4,5]
+# arg_list = [value for value in range(1, 6)]
+# arg_list = [1,2,3,4,5]
 
-foo(*arg_list) # 콜렉션 언페킹이 일어남
+# foo(*arg_list) # 콜렉션 언페킹이 일어남 :배열, 리스트, 튜플, 딕셔너리 등과 같은 콜렉션 데이터를 여러 변수에 나누어 할당하는 기법을 의미
+    
+# Overloading
+# 함수와 메서드에 적용이 된다.
+# 사용 목적은? 프로그래머에게 코드 작성의 편리성을 제공하기 위해.
+# 파이썬에서는 지원하지 않는다.
+# 기본 위치 인자를 이용하면 함수 오버로딩 기능을 구현 할 수 있다.
+
+# def bar(*args):
+#     return sum(args)
+
+# print(bar(2, 3, 4, 5))
+# print(bar(2, 3, 4))
+# print(bar(2, 3))
+
+def bar(arg_fnc):
+    arg_fnc()
+    
+def foo():
+    print("안녕하세요: ")
+    
+bar(foo)
+# 함수는 파이썬에서 first class로 처리를 함
