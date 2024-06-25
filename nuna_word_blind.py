@@ -19,7 +19,7 @@ s_list = user_choice_list[:]
 count_word = len(user_choice_list)
 #블라인드 글자수 블라인드 추가 
 half_word = count_word // 2
-if half_word % 2 != 0:
+if count_word % 2 != 0:
     half_word += 1
     
 count = 0
