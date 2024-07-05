@@ -45,3 +45,66 @@
 #         print(item, end=' ') # end를 쓰는 이유 : 줄바꿈 및 줄바꿈 대신 공백으로 바꿈
 #     print()
 
+# # 행을 삭제
+# bar = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+# del bar[1]
+
+# print(bar)
+
+# # 열을 삭제
+# bar = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+# del bar[1][1]
+
+# print(bar)
+
+# # 모든 행에서 동일한 위치의 인덱스 삭제 방법
+# bar = [[1,2,3], [4,5,6], [7,8,9]]
+
+# for row in bar:
+#     del row[1]
+# print(bar)
+
+# 바로 위에꺼 함수로 만들면
+# def print_matrix(arg_list):
+#     for row in arg_list:
+#         for col in row:
+#             print(col, "\t", end="")
+#         print()
+#     print("-" * 20)
+
+# def del_col(arg_list, col_num):
+#     for index in range(len(arg_list)):
+#         del arg_list[index][col_num]
+
+# matrix = [[1, 2], [3, 4, 5], [6, 7, 8, 9]]
+
+# print_matrix(matrix)
+
+# del_col(matrix, 1)
+
+# print(len(matrix))
+# print(len(matrix[0]))
+# print(len(matrix[1]))
+# print(len(matrix[2]))
+
+# matrix = [[1,2,3], [4,5], [6,7]]
+# # matrix의 2번째 인덱스에 해당하는 리스트에 100을 추가한다. 추가 할때 맨뒤에 붙는다.
+# matrix[1].append(100)
+# print(matrix)
+
+# matrix = [[1,2,3], [4,5], [6,7]]
+# # matrix리스트 자체에 리스트를 추가하면 됨
+# matrix.append([8, 9, 10, 11])
+# print(matrix)
+
+# matrix.insert(2, [100, 200, 300])
+# print(matrix)
+
+
+# 3차원 리스트
+bar = [[[1,2,3], [4,5,6], [7,8,9]], [[10,11,12], [13,14,15], [16,17,18]]]
+print(len(bar)) # 2
+print(len(bar[0])) # 3
+print(len(bar[0][2])) # 3
