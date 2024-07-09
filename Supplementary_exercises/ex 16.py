@@ -1,6 +1,3 @@
-# 이거 잘 풀수있으면 중간고사 반 이상 가능
-# 많이 풀어보자
-
 import random
 
 def getRandList(argNumRandValues, argStartValue, argEndValue):
