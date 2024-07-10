@@ -71,15 +71,15 @@ while True:
     user_input = int(input())
     
     if user_input == 1:
-        std_id = int(input("학번을 입력하세요\t"))
+        std_id = int(input("학번을 입력하세요\n"))
         id_list.append(std_id)
-        name = input("이름을 입력하세요\t")
+        name = input("이름을 입력하세요\n")
         name_list.append(name)
-        score_kor = int(input("국어 성적을 입력하세요\t"))
+        score_kor = int(input("국어 성적을 입력하세요\n"))
         kor_list.append(score_kor)
-        score_eng = int(input("영어 성적을 입력하세요\t"))
+        score_eng = int(input("영어 성적을 입력하세요\n"))
         eng_list.append(score_eng)
-        score_math = int(input("수학 성적을 입력하세요\t"))
+        score_math = int(input("수학 성적을 입력하세요\n"))
         math_list.append(score_math)
 
         sum_score = score_kor + score_eng + score_math
