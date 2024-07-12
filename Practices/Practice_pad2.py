@@ -12,7 +12,7 @@ while True:
     print(" " * 10)
     print(f"현 입력데이터 갯수 : {count}")
     if count > 0:
-        total_avg = sum([students for student_list in students]) / count # 여기를 수정해야함 마지막 입력한 평균이 나옴 평균들의 평균이 나와야함.
+        total_avg = sum([student['total'][-1] for student in students]) / count # 여기를 수정해야함 마지막 입력한 평균이 나옴 평균들의 평균이 나와야함.
         print(f"전체 학생 평균 값 : {total_avg:.2f}")
     else:
         print("전체 학생 평균 값 : 0.00")

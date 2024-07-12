@@ -6,20 +6,15 @@
 /: 나누기(몫)
 %: 나누기(나머지)
 **:거듭제곱 ex) print(2 ** 3) = 8
-"""
 
-"""
 변수명 = 변수값
-
 변수명은 변수에 맞는 이름이나 자기가 지어주고 싶은 변수명 사용하면 됩니다.
 변수값은 필요한 값을 넣어주거나 입력을 받게 할 수도 있다.
 
 예시) 
 n = 3
-
 설명) "n"이라는 변수명을 가진 변수에 숫자 3을 넣음
 여기서 변수값은 3이 된다.
-"""
 
 # a에 10을 넣어주는 코드
 a = 10
@@ -28,11 +23,8 @@ b = 3
 
 #a에 들어가 있는 값을 출력
 print(a)
-
 #b에 들어가 있는 값을 출력
 print(b)
-
-#현재 a에는 10 b에는 3이 들어가 있는 상태
 
 #a 와 b를 더한 값을 출력하는 코드 a + b = ?
 print(a + b)
@@ -49,7 +41,6 @@ print(a / b)
 #a 와 b를 나눈 후 나온 나머지을 출력하는 코드 a % b = ?
 print(a % b)
 
-"""
 int : 정수.
 str : 문자.
 float : 실수.
@@ -104,6 +95,9 @@ print(bar.pop(2)) : del과 같은 건데 해당 리스트의 값(좌표 : 인덱
 bar = {'key' : 'value', 'key2' : 'value2'} : 딕셔너리 생성
 새로운 값을 할당하려면 그냥 지정해주기만하면 되고 삭제는 del key값 하면 삭제 된다.
 모든 키와 해당 값 삭제 : bar.clear()
-for key in person: - 키 값을 순회
+for key in person: - key 값을 순회
+for key in bar.keys(): - key 값을 출력
+for key in bar.values(): - value 값을 출력
+for key in bar.items(): - key, value 값 출력
 
 """
