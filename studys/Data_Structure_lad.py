@@ -30,13 +30,13 @@ while True:
         avg = sum_score / 3
         # 딕셔너리
         student = {'id' : std_id, 'name' : name, 'kor' : score_kor, 'eng' : score_eng, 'math' : score_math, 'sum' : sum_score, 'avg' : avg}
-
+        
         students.append(student)
         count += 1
         
     elif user_input == 2:
         for student in students:
             print(f"[ id : {student['id']} name : {student['name']} kor : {student['kor']} eng : {student['eng']} math : {student['math']} sum : {student['sum']} avg : {student['avg']:.2f} ]")
-    
+            
     elif user_input == 3:
         break
