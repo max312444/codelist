@@ -21,9 +21,8 @@
 # #     total = sum/3
 # #     print(sum)
 # #     print(total)
-    
-    
 # # sum_total()
+
 # def get_int(arg_num):
 #     input_values = []
 #     for _ in range(arg_num):
@@ -67,8 +66,8 @@
 # result = sum(2, 3)
 # print(result) # result -> 5 # 5
 
-# result = (sum(-2, -3))
-# print(result)
+# result = (sum(-2, -3)) # 음수
+# print(result) # None
 
 # 한 개의 정수를 키보드로부터 입력 받아 "짝수", "홀수"를 판별하여 화면에 출력
 
@@ -86,7 +85,18 @@
 #     return msg
         
 # input_value = int(input("정수 입력: "))        
-# get_even_odd()
+# num = get_even_odd(input_value)
+# print(num)
+
+# 위에 꺼를 풀어서 쓰면 밑에와 같다.
+# def get_even_odd(arg_num):
+#     if arg_num % 2 == 0:
+#         print("짝수")
+#     else:
+#         print("홀수")
+#     return 
+# input_value = int(input("정수 입력: "))
+# get_even_odd(input_value)
 
 # 함수의 인자 값 4개를 입력받아 합계와 평균을 출력하시오
 
