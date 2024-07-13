@@ -92,9 +92,12 @@ break와 비슷한 효과를 내지만 break는 반복문을 아에 종료를 �
 end = 줄바꿈 없애고 출력 ex) print("*",end="") 그냥 print를 하면 따로 한줄씩 별이 출력이 되지만
 이렇게 하면 별을 연속적으로 붙여서 출력이 가능하다.  
 print(bar.pop(2)) : del과 같은 건데 해당 리스트의 값(좌표 : 인덱스 번호)을 가져오고 삭제한다.
-bar = {'key' : 'value', 'key2' : 'value2'} : 딕셔너리 생성
 새로운 값을 할당하려면 그냥 지정해주기만하면 되고 삭제는 del key값 하면 삭제 된다.
 모든 키와 해당 값 삭제 : bar.clear()
+
+bar = {'key' : 'value', 'key2' : 'value2'} : dictionary 생성
+dictionary안에 리스트를 value 값으로 지정할 수 있다.
+key는 중복되지 않아야 하지만, value값은 중복되어도 상관없다. 탐색, 검색이 필요없고, key값을 이용해서 접근한다.
 for key in person: - key 값을 순회
 for key in bar.keys(): - key 값을 출력
 for key in bar.values(): - value 값을 출력

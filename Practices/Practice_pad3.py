@@ -1,72 +1,85 @@
-# bar = {}
-
-# bar["father"] = "mother"
-# print(bar["father"])
-
-# bar = {"mother" : 10, "father" : 20, "boy" : 30, "girl" : 40, "man" : 50, "lady" : 60}
-
-# for key in bar.keys(): # 17번과 같은 기능이다.
-#     print(key)
+# def print_name(name):
+#     print(name, "님 안녕하세요")
     
-# for value in bar.values():
-#     print(value)
+# print_name("정영철")
+# print_name("조원준")
 
-# for key, value in bar.items():
-#     print(key, value)
+# def sum_total():
+#     input_value1 = int(input("첫번째 정수"))
+#     input_value2 = int(input("두번째 정수"))
+#     input_value3 = int(input("세번째 정수"))
     
-# for key in bar: # 8번과 같은 기능이다.
-#     print(key)
+#     sum = input_value1 + input_value2 + input_value3
     
-# bar = {"1st_user" : {"name" : "조원준", "age" : 24, "brith" : 6.6}, "2nd_user" : {"name" : "김성식", "age" : 24, "birth" : 1.14}}
+#     total = sum/ 3
+#     print(sum)
+#     print(total)
 
-# print(bar["1st_user"])
-# print(bar["1st_user"]["name"])
-# print(bar["1st_user"]["age"])
-# print(bar["1st_user"]["brith"])
-# print(bar["2nd_user"])
-# print(bar["2nd_user"]["name"])
-# print(bar["2nd_user"]["age"])
-# print(bar["2nd_user"]["birth"])
+# sum_total()
 
-# bar = {"mother" : 10, "father" : 20, "boy" : 30, "girl" : 40}
+# import random
 
-# bar['man'] = "50"
-# bar['lady'] = "60"
-# print(bar)
 
-# bar['man'] = "100"
-# print(bar)
-
-# if "father" in bar:
-#     print("True")
-# else:
-#     print("False")
-
-# del bar["boy"]
-# print(bar)
-
-# if "boy" in bar:
-#     print("True")
-# else:
-#     print("False")
-
-# if "mother" in bar.keys():
-#     print("Yes")
-# else:
-#     print("No")
+# def get_int(arg_num):
+#     input_values = [] # 빈 리스트 생성
+#     random_num = random.randint(0, int(input("최대치: ")))
+#     for _ in range(arg_num): # 범위 지정 및 생성
+#         input_values.append(random_num) # 빈 리스트에 범위 만큼의 수를 입력하여 저장
+            
+#     return input_values # 값 반환
     
-# if 20 in bar.values():
-#     print("yes!")
-# else:
-#     print("No...")
+# def get_sum_avg(arg_list): # 합계 평균 구하는 함수 생성
+#     sum = 0 # 합계 초기화
+#     for value in arg_list:# 입력된 리스트 내의 정수중에서
+#         sum += value # 다 더함
+    
+#     avg = sum / len(arg_list) # 평균은 더한 값을 리스트의 길이로 나누면 된다.1
+    
+#     return sum, avg # 값 반환
 
-std_grades = {}
+# input_list = get_int(5) # 범위 지정 후 리스트로 지정
 
-std_grades[240001] = ["이영일", 10, 20, 30, 60, 30]
-std_grades[240002] = ["이영이", 100, 200, 300, 600, 300]
-std_grades[240003] = ["이영삼", 1000, 2000, 3000, 6000, 3000]
-std_grades[240004] = ["이영사", {"국어" : 100, "수학" : 70, "영어": 80}]
+# sum, avg = get_sum_avg(input_list) # 리스트를 넣어 리스트 내 정수 합, 평균을 구함
 
-print(sum(std_grades[240004][1].values()))
-print(format(sum(std_grades[240004][1].values()) / len(std_grades[240004][1]),".2f"))
+# print(sum, avg)
+
+# def sum(arg_first, arg_second):
+#     sum = arg_first + arg_second
+    
+#     if sum < 0:
+#         print("음수")
+#         return
+#     return sum
+# result = sum(2, 3)
+# print(result)
+
+# result = sum(-2, -3)
+# print(result)
+
+# # 한 개의 정수를 키보드로부터 입력 받아 "짝수", "홀수"를 판별하여 화면에 출력
+
+# def input_value(arg_num):
+#     if arg_num % 2 != 0:
+#         print("음수")
+#     else:
+#         print("양수")
+        
+# input_value(int(input("정수를 입력하세요: ")))
+
+# def get_even_odd(arg_num):
+#     msg = "짝수" if arg_num % 2 == 0 else "홀수"
+        
+#     return msg
+# input_value = int(input("정수 입력: "))
+# num = get_even_odd(input_value)
+# print(num)
+
+# def get_even_odd(arg_num):
+#     if arg_num % 2 == 0:
+#         print("짝수")
+#     else:
+#         print("홀수")
+#     return 
+# input_value = int(input("정수 입력: "))
+# get_even_odd(input_value)
 
