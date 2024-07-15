@@ -60,8 +60,7 @@ for l in range(1, 4):
     for k in range(1, 5): # k가 3일때 다음 반복으로 넘어간다.
         if k == 3:
             continue
-        # i가 2일 때를 제외하고 가능
-        for i in range(1, 3): 
+        for i in range(1, 3): # i가 2일 때를 제외하고 가능
             if i == 2:
                 break
             # j가 3일 때를 제외하고 가능. 만약 j를 시작 값으로 두면 아무것도 출력되지 않는다.
