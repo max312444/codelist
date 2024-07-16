@@ -4,8 +4,6 @@ import random
 pygame.init()
 screen = pygame.display.set_mode((800, 600)) # 화면 설정
 
-# 무작위 색상 생성
-color = (random.randint(0, 255),random.randint(0, 255),random.randint(0, 255))
 # 시작점 (화면 중앙) # 리스트에 넣어서 방향키 입력만큼 값을 늘려줌
 start_pos = [(400, 300)]
 # 이동 거리
