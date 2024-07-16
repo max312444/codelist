@@ -71,32 +71,3 @@
 #         clock.tick(30)
 
 # pygame.quit()
-
-import pygame
-import random
-
-pygame.init()
-screen = pygame.display.set_mode((800, 600))
-
-screen.fill((255, 255, 255))
-pygame.display.flip()
-
-# 원 그리기
-
-# 색상 정의 
-count = 0 
-random_num = random.randint(5, 20) # 출력할 원의 개수
-# 점 그리기
-for _ in range(random_num):
-    radius = random.randint(10, 100)
-    color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-    position = (random.randint(0 + radius, 800 - radius), random.randint(0 + radius, 6))
-pygame.display.flip()
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    
-pygame.quit()
