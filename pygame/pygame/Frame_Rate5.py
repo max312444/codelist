@@ -44,19 +44,19 @@ while running:
         circle_y -= speed * dt
     if keys[pygame.K_DOWN]:
         circle_y += speed * dt
-    if keys[pygame.K_r]:
+    if keys[pygame.K_r]: # 최초의 자리로 이동
         circle_x = screen_width // 2
         circle_y = screen_height // 2
-    if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
+    if keys[pygame.K_LEFT] and keys[pygame.K_UP]: # 대각선 
         circle_x -= speed * dt
         circle_y -= speed * dt
-    if keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
+    if keys[pygame.K_RIGHT] and keys[pygame.K_UP]: # 대각선 
         circle_x += speed * dt
         circle_y -= speed * dt
-    if keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
+    if keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]: # 대각선 
         circle_x += speed * dt
         circle_y += speed * dt
-    if keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]:
+    if keys[pygame.K_RIGHT] and keys[pygame.K_DOWN]: # 대각선 
         circle_x += speed * dt
         circle_y += speed * dt
     
