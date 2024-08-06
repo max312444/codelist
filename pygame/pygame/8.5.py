@@ -20,7 +20,7 @@ speed = 10
 delta_speed = 0
 
 clock = pygame.time.Clock()
-fps = 30
+fps = 50
 
 running = True
 while running:
