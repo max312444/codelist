@@ -44,8 +44,8 @@ def create_items(num_items, size, screen_width, screen_height, obstacles):
     return items
 
 # 장애물 및 아이템 생성
-obstacles = create_obstacles(5, 50, screen_width, screen_height)
-items = create_items(10, 20, screen_width, screen_height, obstacles)
+obstacles = create_obstacles(60, 10, screen_width, screen_height)
+items = create_items(10, 8, screen_width, screen_height, obstacles)
 
 # 이동하는 Rect 생성
 m_width = m_height = 50
@@ -62,7 +62,8 @@ velocity = 300 # 초당 300 픽셀 이동
 
 # FPS 제어를 위한 Clock 객체 생성
 clock = pygame.time.Clock()
-
+# 목숨 계산
+count = 0
 # 게임 루프
 running = True
 
@@ -88,13 +89,17 @@ while running:
         moving_rect.y -= velocity * dt # 위
     if keys[pygame.K_DOWN]:
         moving_rect.y += velocity * dt # 아래
-        
+    
+    moving_rect.x = max(0, min(moving_rect.x, screen.get_width() - moving_rect.width)) # 왼쪽 오른쪽
+    moving_rect.y = max(0, min(moving_rect.y, screen.get_height() - moving_rect.height)) # 위 아래
+    
     # 충돌 감지
     collision_index = moving_rect.collidelist(obstacles)   
     if collision_index != -1:
-        # 장애물 충돌시 위치 복원
-        print(f"장애물 {collision_index}와 충돌! 위치 복원.")
-        moving_rect.topleft = previous_position
+        # 장애물 충돌시 시작 위치로 이동
+        print(f"장애물 {collision_index}와 충돌! 시작 위치로 이동.")
+        moving_rect.topleft = m_x, m_y
+        count += 1
     
     # 아이템 수집
     item_index = moving_rect.collidelist(items)
@@ -107,10 +112,14 @@ while running:
     if not items:
         print("모든 아이템을 수집했습니다! 승리!")
         running = False
+    
+    # 5회이상 장애물에 닿으면 게임 종료
+    if count >= 5:
+        running = False
         
         # 화면 초기화
     screen.fill(white)
-    
+
     # 장애물 그리기
     for obs in obstacles:
         pygame.draw.rect(screen, blue, obs)

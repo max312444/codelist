@@ -3,14 +3,14 @@ import random
 
 pygame.init()
 screen_width = 480
-screen_height = 660
+screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("운석 피하기")
 clock = pygame.time.Clock()
 running = True
 
-player = pygame.image.load("C:\code\pygame\pygame\player.png")
-stone = pygame.image.load("C:\code\pygame\pygame\star.png")
+player = pygame.image.load("C:\code\pygame\pygame\player_r.png")
+stone = pygame.image.load("C:\code\pygame\pygame\star_r.png")
 
 player_size = player.get_rect().size
 player_width = player_size[0]
@@ -23,14 +23,14 @@ stone_height = stone_size[1]
 player_x_pos = (screen_width / 2) - (player_width / 2)
 player_y_pos = screen_height - player_height
 
-stone_x_pos = random.randint(0, (screen_width - player_width))
+stone_x_pos = random.randint(0, (screen_width - stone_width))
 stone_y_pos = 0
 
 to_x = 0
 to_y = 0
 
-speed = 0.5  # 속도 증가
-stone_speed = 1  # 속도 증가
+speed = 100  # 속도 증가
+stone_speed = 200  # 속도 증가
 
 game_over_font = pygame.font.Font(None, 100)
 game_font = pygame.font.Font(None, 40)
@@ -40,9 +40,8 @@ avoid_stone = 0
 
 while running:
 
-    dt = clock.tick(30)
-    to_y = 0
-    to_y += stone_speed # * dt  # dt 곱하기 추가
+    dt = clock.tick(60) / 1000
+    to_y += stone_speed * dt  # dt 곱하기 추가
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -56,9 +55,18 @@ while running:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 to_x = 0
-
-    player_x_pos += to_x
-    stone_y_pos += to_y
+        
+    # keys = pygame.key.get_pressed()
+    # if keys[pygame.K_LEFT]:
+    #     to_x -= speed * dt
+    # if keys[pygame.K_RIGHT]:
+    #     to_x += speed * dt
+    # if keys[pygame.K_UP]:
+    #     to_y -= speed * dt
+    # if keys[pygame.K_DOWN]:
+    #     to_y += speed * dt
+    # player_x_pos += to_x
+    # stone_y_pos += stone_speed * dt
 
     if player_x_pos < 0:
         player_x_pos = 0
