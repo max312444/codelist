@@ -44,8 +44,8 @@ def create_items(num_items, size, screen_width, screen_height, obstacles):
     return items
 
 # 장애물 및 아이템 생성
-obstacles = create_obstacles(60, 10, screen_width, screen_height)
-items = create_items(10, 8, screen_width, screen_height, obstacles)
+obstacles = create_obstacles(15, 50, screen_width, screen_height)
+items = create_items(15, 15, screen_width, screen_height, obstacles)
 
 # 이동하는 Rect 생성
 m_width = m_height = 50
