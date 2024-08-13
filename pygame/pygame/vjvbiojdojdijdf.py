@@ -47,9 +47,8 @@ obstacles = []
 # 장애물 총알 설정
 obstacle_bullets = []
 obstacle_bullet_speed = 5
-
-# 장애물마다 다른 발사 딜레이를 위한 딕셔너리
-obstacle_fire_times = {}
+obstacle_fire_delay = 1000  # 1초마다 발사
+last_obstacle_fire_time = pygame.time.get_ticks()
 
 # 점수 초기화
 score = 0
@@ -93,7 +92,7 @@ def game_over_screen():
                     sys.exit()
 
 def game_loop():
-    global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time
+    global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time, last_obstacle_fire_time
     
     while True:
         current_time = pygame.time.get_ticks()
@@ -126,24 +125,19 @@ def game_loop():
                 
                 # 다른 장애물들과 겹치지 않는 위치 찾기
                 if not is_colliding_with_existing_obstacles(new_obstacle, obstacles):
-                    # 장애물에 고유 식별자 부여
-                    obstacle_id = len(obstacles)  # 장애물의 개수를 ID로 사용
-                    obstacles.append((new_obstacle, current_time, obstacle_id))  # 장애물과 생성 시간, ID 추가
-                    # 새로운 장애물에 랜덤 발사 타이밍 설정
-                    obstacle_fire_times[obstacle_id] = current_time + random.randint(500, 2000)  # 0.5초에서 2초 사이의 랜덤 시간 후 발사
+                    obstacles.append((new_obstacle, current_time))  # 장애물과 생성 시간 추가
                     last_spawn_time = current_time
                     break
 
         # 장애물 삭제 (생존 시간 4초 초과 시)
-        obstacles = [(obstacle, spawn_time, obstacle_id) for obstacle, spawn_time, obstacle_id in obstacles if current_time - spawn_time < obstacle_lifetime]
+        obstacles = [(obstacle, spawn_time) for obstacle, spawn_time in obstacles if current_time - spawn_time < obstacle_lifetime]
 
         # 장애물 총알 발사
-        for obstacle, spawn_time, obstacle_id in obstacles:
-            if current_time >= obstacle_fire_times.get(obstacle_id, 0):
+        if current_time - last_obstacle_fire_time > obstacle_fire_delay:
+            for obstacle, _ in obstacles:
                 obstacle_bullet = pygame.Rect(obstacle.x + obstacle_size[0] // 2 - bullet_width // 2, obstacle.y + obstacle_size[1], bullet_width, bullet_height)
                 obstacle_bullets.append(obstacle_bullet)
-                # 다음 발사 시간 설정
-                obstacle_fire_times[obstacle_id] = current_time + random.randint(500, 2000)
+            last_obstacle_fire_time = current_time
 
         # 장애물 총알 이동 및 충돌 체크
         for obstacle_bullet in obstacle_bullets[:]:
@@ -163,10 +157,10 @@ def game_loop():
             bullet.y -= bullet_speed
 
             # 총알과 장애물 충돌 체크
-            for obstacle, _, _ in obstacles[:]:
+            for obstacle, _ in obstacles[:]:
                 if bullet.colliderect(obstacle):
                     bullets.remove(bullet)
-                    obstacles = [(obs, st, oid) for obs, st, oid in obstacles if obs != obstacle]  # 충돌한 장애물 제거
+                    obstacles.remove((obstacle, _))
                     score += 10  # 점수 증가
                     break
             
@@ -185,7 +179,7 @@ def game_loop():
             pygame.draw.rect(screen, YELLOW, bullet)
         
         # 장애물 그리기
-        for obstacle, _, _ in obstacles:
+        for obstacle, _ in obstacles:
             screen.blit(obstacle_image, (obstacle.x, obstacle.y))
 
         # 장애물 총알 그리기
@@ -202,4 +196,3 @@ def game_loop():
 # 게임 실행
 while True:
     game_loop()
- 

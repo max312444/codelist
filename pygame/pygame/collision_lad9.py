@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 
 def spawn_square():
     # 랜덤한 x 위치에 새로운 사각형 생성
-    x_position = random.randint(0, screen_width - square_size)
+    x_position = random.randint(0, screen_width - square_size) 
     new_square = pygame.Rect(x_position, 0, square_size, square_size)
     falling_squares.append(new_square)
     
