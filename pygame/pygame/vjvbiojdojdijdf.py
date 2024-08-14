@@ -12,11 +12,26 @@ pygame.display.set_caption("움직임과 장애물 파괴")
 
 # 배경음악 파일 로드
 background_music = pygame.mixer.music.load("start.mp3")
-pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.7)
+
+# 음악을 특정 시간 간격으로 반복 재생
+music_length = 7  # 음악의 길이 (초)
+music_played_time = 0  # 음악이 재생된 시간 (밀리초 단위)
+
+def play_music():
+    global music_played_time
+    pygame.mixer.music.play(loops=-1)  # 무한 반복으로 음악 재생
+    music_played_time = pygame.time.get_ticks()  # 음악 재생 시작 시간 기록
+
+play_music()
 
 # 총소리 파일 로드
 sound_fire = pygame.mixer.Sound("shot.mp3")
 sound_fire.set_volume(0.5)
+
+# 적 처치 소리 파일 로드
+sound_hit = pygame.mixer.Sound("hit.mp3")
+sound_hit.set_volume(0.7)
 
 # 색상 정의
 WHITE = (255, 255, 255)
@@ -30,8 +45,6 @@ clock = pygame.time.Clock()
 # 플레이어 이미지 로드 및 설정
 player_image = pygame.image.load("player1.png")  # 플레이어 이미지 로드
 player_size = player_image.get_rect().size  # 이미지 크기 가져오기
-player_x = screen_width // 2 - player_size[0] // 2
-player_y = screen_height - player_size[1] - 10
 player_speed = 5
 
 # 공격 설정
@@ -47,8 +60,10 @@ obstacles = []
 # 장애물 총알 설정
 obstacle_bullets = []
 obstacle_bullet_speed = 5
-obstacle_fire_delay = 1000  # 1초마다 발사
-last_obstacle_fire_time = pygame.time.get_ticks()
+
+# 랜덤한 텀으로 발사 딜레이 설정
+obstacle_fire_delay_min = 500  # 최소 0.5초
+obstacle_fire_delay_max = 2000  # 최대 2초
 
 # 점수 초기화
 score = 0
@@ -56,17 +71,28 @@ font = pygame.font.SysFont(None, 36)
 
 # 장애물 생성 타이머 설정
 spawn_delay = 800  # 0.8초마다 장애물 생성
-last_spawn_time = pygame.time.get_ticks()
 
 # 발사 딜레이 설정
 shoot_delay = 300  # 0.3초 딜레이
-last_shoot_time = pygame.time.get_ticks()
 
 # 장애물 생존 시간 설정
 obstacle_lifetime = 4000  # 4초
 
+def reset_game():
+    global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time
+
+    # 초기화
+    player_x = screen_width // 2 - player_size[0] // 2
+    player_y = screen_height - player_size[1] - 10
+    bullets = []
+    obstacles = []
+    obstacle_bullets = []
+    score = 0
+    last_shoot_time = pygame.time.get_ticks()
+    last_spawn_time = pygame.time.get_ticks()
+
 def is_colliding_with_existing_obstacles(new_obstacle, obstacles):
-    for obstacle, _ in obstacles:
+    for obstacle, _, _, _ in obstacles:
         if new_obstacle.colliderect(obstacle):
             return True
     return False
@@ -86,17 +112,25 @@ def game_over_screen():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:  # R 키를 누르면 게임 재시작
-                    return
+                    reset_game()
+                    return  # 메인 게임 루프로 복귀
                 elif event.key == pygame.K_q:  # Q 키를 누르면 게임 종료
                     pygame.quit()
                     sys.exit()
 
 def game_loop():
-    global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time, last_obstacle_fire_time
+    global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time
+    
+    reset_game()  # 게임 루프 시작 시 게임 초기화
     
     while True:
         current_time = pygame.time.get_ticks()
-        
+
+        # 음악이 특정 시간 간격으로 반복되도록 조정
+        if current_time - music_played_time >= music_length * 1000:
+            pygame.mixer.music.stop()  # 음악 정지
+            play_music()  # 음악 재생
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -125,19 +159,25 @@ def game_loop():
                 
                 # 다른 장애물들과 겹치지 않는 위치 찾기
                 if not is_colliding_with_existing_obstacles(new_obstacle, obstacles):
-                    obstacles.append((new_obstacle, current_time))  # 장애물과 생성 시간 추가
+                    # 새로운 장애물 생성 및 발사 딜레이와 마지막 발사 시간 초기화
+                    obstacle_fire_delay = random.randint(obstacle_fire_delay_min, obstacle_fire_delay_max)
+                    last_obstacle_fire_time = current_time
+                    obstacles.append((new_obstacle, current_time, last_obstacle_fire_time, obstacle_fire_delay))
                     last_spawn_time = current_time
                     break
 
         # 장애물 삭제 (생존 시간 4초 초과 시)
-        obstacles = [(obstacle, spawn_time) for obstacle, spawn_time in obstacles if current_time - spawn_time < obstacle_lifetime]
+        obstacles = [(obstacle, spawn_time, last_fire_time, fire_delay) for obstacle, spawn_time, last_fire_time, fire_delay in obstacles if current_time - spawn_time < obstacle_lifetime]
 
         # 장애물 총알 발사
-        if current_time - last_obstacle_fire_time > obstacle_fire_delay:
-            for obstacle, _ in obstacles:
-                obstacle_bullet = pygame.Rect(obstacle.x + obstacle_size[0] // 2 - bullet_width // 2, obstacle.y + obstacle_size[1], bullet_width, bullet_height)
+        for obstacle in obstacles:
+            obstacle_rect, _, last_obstacle_fire_time, obstacle_fire_delay = obstacle
+            if current_time - last_obstacle_fire_time > obstacle_fire_delay:
+                obstacle_bullet = pygame.Rect(obstacle_rect.x + obstacle_size[0] // 2 - bullet_width // 2, obstacle_rect.y + obstacle_size[1], bullet_width, bullet_height)
                 obstacle_bullets.append(obstacle_bullet)
-            last_obstacle_fire_time = current_time
+                
+                # 발사 후 랜덤한 텀 설정
+                obstacles[obstacles.index(obstacle)] = (obstacle_rect, _, current_time, random.randint(obstacle_fire_delay_min, obstacle_fire_delay_max))
 
         # 장애물 총알 이동 및 충돌 체크
         for obstacle_bullet in obstacle_bullets[:]:
@@ -157,12 +197,14 @@ def game_loop():
             bullet.y -= bullet_speed
 
             # 총알과 장애물 충돌 체크
-            for obstacle, _ in obstacles[:]:
-                if bullet.colliderect(obstacle):
+            for obstacle in obstacles[:]:
+                obstacle_rect, _, _, _ = obstacle
+                if bullet.colliderect(obstacle_rect):
                     bullets.remove(bullet)
-                    obstacles.remove((obstacle, _))
+                    obstacles.remove(obstacle)
+                    sound_hit.play()
                     score += 10  # 점수 증가
-                    break
+                    break 
             
             # 화면 밖으로 나간 총알 제거
             if bullet.y < 0:
@@ -179,7 +221,7 @@ def game_loop():
             pygame.draw.rect(screen, YELLOW, bullet)
         
         # 장애물 그리기
-        for obstacle, _ in obstacles:
+        for obstacle, _, _, _ in obstacles:
             screen.blit(obstacle_image, (obstacle.x, obstacle.y))
 
         # 장애물 총알 그리기

@@ -1,7 +1,6 @@
 import pygame
 import sys
 import random
-import time
 
 # 파이게임 초기화
 pygame.init()
@@ -13,17 +12,7 @@ pygame.display.set_caption("움직임과 장애물 파괴")
 
 # 배경음악 파일 로드
 background_music = pygame.mixer.music.load("start.mp3")
-
-# 음악을 특정 시간 간격으로 반복 재생
-music_length = 6  # 음악의 길이 (초)
-music_played_time = 0  # 음악이 재생된 시간 (밀리초 단위)
-
-def play_music():
-    global music_played_time
-    pygame.mixer.music.play(loops=-1)  # 무한 반복으로 음악 재생
-    music_played_time = pygame.time.get_ticks()  # 음악 재생 시작 시간 기록
-    
-play_music()
+pygame.mixer.music.play(-1)
 
 # 총소리 파일 로드
 sound_fire = pygame.mixer.Sound("shot.mp3")
@@ -194,7 +183,7 @@ def game_loop():
                     bullets.remove(bullet)
                     obstacles.remove(obstacle)
                     score += 10  # 점수 증가
-                    break 
+                    break
             
             # 화면 밖으로 나간 총알 제거
             if bullet.y < 0:
