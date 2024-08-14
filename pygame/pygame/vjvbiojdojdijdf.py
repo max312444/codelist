@@ -65,6 +65,16 @@ obstacle_bullet_speed = 5
 obstacle_fire_delay_min = 500  # 최소 0.5초
 obstacle_fire_delay_max = 2000  # 최대 2초
 
+# 점수 2배 이미지 로드 및 설정
+score_doudle_image = pygame.image.load("score_doudle.png")  # 점수2배 이미지 로드
+score_doudle_size = score_doudle_image.get_rect().size  # 이미지 크기 가져오기
+score_doudles = []
+
+# 점수 2배 이미지 로드 및 설정
+bullet_doudle_image = pygame.image.load("score_doudle.png")  # 점수2배 이미지 로드
+bullet_doudle_size = bullet_doudle_image.get_rect().size  # 이미지 크기 가져오기
+bullet_doudles = []
+
 # 점수 초기화
 score = 0
 font = pygame.font.SysFont(None, 36)
@@ -100,6 +110,7 @@ def is_colliding_with_existing_obstacles(new_obstacle, obstacles):
 def game_over_screen():
     while True:
         screen.fill(BLACK)
+        pygame.mixer.music.stop()
         game_over_text = font.render("Game Over", True, RED)
         restart_text = font.render("Press R to Restart or Q to Quit", True, WHITE)
         screen.blit(game_over_text, (screen_width // 2 - game_over_text.get_width() // 2, screen_height // 3))
