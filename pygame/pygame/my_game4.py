@@ -6,7 +6,7 @@ import random
 pygame.init()
 
 # 화면 크기 설정
-screen_width, screen_height = 1280, 720
+screen_width, screen_height = 1000, 750
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("움직임과 장애물 파괴")
 
@@ -33,7 +33,7 @@ sound_fire.set_volume(0.5)
 sound_hit = pygame.mixer.Sound("hit.mp3")
 sound_hit.set_volume(0.7)
 
-# # 아이템 획득 소리 파일 로드
+# 아이템 획득 소리 파일 로드
 # sound_item = pygame.mixer.Sound("item.mp3")
 # sound_item.set_volume(0.7)
 
@@ -106,6 +106,22 @@ item_end_time = 0
 # 아이템 떨어지는 속도 설정
 item_fall_speed = 3
 
+# 최고 점수를 저장할 파일 이름
+high_score_file = "high_score.txt"
+
+def load_high_score():
+    """저장된 최고 점수를 파일에서 불러옵니다."""
+    try:
+        with open(high_score_file, "r") as file:
+            return int(file.read())
+    except (FileNotFoundError, ValueError):
+        return 0
+
+def save_high_score(new_high_score):
+    """새로운 최고 점수를 파일에 저장합니다."""
+    with open(high_score_file, "w") as file:
+        file.write(str(new_high_score))
+
 def reset_game():
     global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time, bullet_double_active, bullet_double_end_time, score_doudles, bullet_doudles, active_item, item_end_time, shoot_delay
 
@@ -138,14 +154,18 @@ def is_colliding_with_existing_items(new_item, items):
             return True
     return False
 
-def game_over_screen():
+def game_over_screen(high_score):
     while True:
         screen.fill(BLACK)
         pygame.mixer.music.stop()
         game_over_text = font.render("Game Over", True, RED)
+        score_text = font.render(f"Your Score: {score}", True, WHITE)
+        high_score_text = font.render(f"High Score: {high_score}", True, WHITE)
         restart_text = font.render("Press R to Restart or Q to Quit", True, WHITE)
         screen.blit(game_over_text, (screen_width // 2 - game_over_text.get_width() // 2, screen_height // 3))
-        screen.blit(restart_text, (screen_width // 2 - restart_text.get_width() // 2, screen_height // 2))
+        screen.blit(score_text, (screen_width // 2 - score_text.get_width() // 2, screen_height // 2 - 30))
+        screen.blit(high_score_text, (screen_width // 2 - high_score_text.get_width() // 2, screen_height // 2 + 10))
+        screen.blit(restart_text, (screen_width // 2 - restart_text.get_width() // 2, screen_height // 2 + 50))
         pygame.display.flip()
         
         for event in pygame.event.get():
@@ -163,6 +183,7 @@ def game_over_screen():
 def game_loop():
     global player_x, player_y, bullets, obstacles, obstacle_bullets, score, last_shoot_time, last_spawn_time, bullet_double_active, bullet_double_end_time, score_doudles, bullet_doudles, last_item_spawn_time, active_item, item_end_time, shoot_delay
 
+    high_score = load_high_score()  # 최고 점수 로드
     reset_game()  # 게임 루프 시작 시 게임 초기화
     
     while True:
@@ -194,17 +215,18 @@ def game_loop():
 
         # 장애물 생성
         if current_time - last_spawn_time > spawn_delay:
-            while True:
-                obstacle_x = random.randint(0, screen_width - obstacle_size[0])
-                obstacle_y = 50
-                new_obstacle = pygame.Rect(obstacle_x, obstacle_y, obstacle_size[0], obstacle_size[1])
-                
-                if not is_colliding_with_existing_obstacles(new_obstacle, obstacles):
-                    obstacle_fire_delay = random.randint(obstacle_fire_delay_min, obstacle_fire_delay_max)
-                    last_obstacle_fire_time = current_time
-                    obstacles.append((new_obstacle, current_time, last_obstacle_fire_time, obstacle_fire_delay))
-                    last_spawn_time = current_time
-                    break
+            obstacle_rect = pygame.Rect(random.randint(0, screen_width - obstacle_size[0]), 0, obstacle_size[0], obstacle_size[1])
+            if not is_colliding_with_existing_obstacles(obstacle_rect, obstacles):
+                obstacles.append((obstacle_rect, current_time, current_time, random.randint(obstacle_fire_delay_min, obstacle_fire_delay_max)))
+            last_spawn_time = current_time
+
+        # 장애물 이동 및 생존 시간 체크
+        for obstacle, spawn_time, last_obstacle_fire_time, obstacle_fire_delay in obstacles[:]:
+            obstacle.y += 3
+            if obstacle.y > screen_height:
+                obstacles.remove((obstacle, spawn_time, last_obstacle_fire_time, obstacle_fire_delay))
+            elif pygame.Rect(player_x, player_y, player_size[0], player_size[1]).colliderect(obstacle):
+                game_over_screen(high_score)
 
         # 장애물 삭제 (생존 시간 4초 초과 시)
         obstacles = [(obstacle, spawn_time, last_fire_time, fire_delay) for obstacle, spawn_time, last_fire_time, fire_delay in obstacles if current_time - spawn_time < obstacle_lifetime]
@@ -223,7 +245,7 @@ def game_loop():
             obstacle_bullet.y += obstacle_bullet_speed
 
             if obstacle_bullet.colliderect(pygame.Rect(player_x, player_y, player_size[0], player_size[1])):
-                game_over_screen()
+                game_over_screen(high_score)
 
             if obstacle_bullet.y > screen_height:
                 obstacle_bullets.remove(obstacle_bullet)
@@ -249,10 +271,12 @@ def game_loop():
             item_type = random.choice(["score_double", "bullet_double"])  # 랜덤 아이템 선택
             if item_type == "score_double":
                 item = pygame.Rect(random.randint(0, screen_width - score_double_size[0]), 0, score_double_size[0], score_double_size[1])  # 위에서 떨어지도록 생성
-                score_doudles.append((item, item_type))
+                if not is_colliding_with_existing_items(item, score_doudles):
+                    score_doudles.append((item, item_type))
             elif item_type == "bullet_double":
                 item = pygame.Rect(random.randint(0, screen_width - bullet_double_size[0]), 0, bullet_double_size[0], bullet_double_size[1])  # 위에서 떨어지도록 생성
-                bullet_doudles.append((item, item_type))
+                if not is_colliding_with_existing_items(item, bullet_doudles):
+                    bullet_doudles.append((item, item_type))
             last_item_spawn_time = current_time  # 마지막 아이템 생성 시간 업데이트
 
         # 아이템 먹기 및 효과 적용
@@ -314,6 +338,10 @@ def game_loop():
         score_text = font.render(f"Score: {score}", True, WHITE)
         screen.blit(score_text, (10, 10))
 
+        # 최고 점수 표시
+        high_score_text = font.render(f"High Score: {high_score}", True, WHITE)
+        screen.blit(high_score_text, (10, 50))
+
         # 활성화된 아이템 및 남은 시간 표시
         if active_item:
             remaining_time = (item_end_time - current_time) // 1000  # 초 단위로 계산
@@ -322,5 +350,11 @@ def game_loop():
 
         pygame.display.flip()
         clock.tick(60)
+
+        # 게임 오버 시 최고 점수 업데이트 및 저장
+        if current_time > item_end_time and not bullet_double_active:
+            if score > high_score:
+                high_score = score
+                save_high_score(high_score)
 
 game_loop()
