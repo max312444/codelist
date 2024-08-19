@@ -36,12 +36,25 @@ obstacle_y = random.randint(0, screen_height - obstacle_size[1])
 obstacle_rect = pygame.Rect(obstacle_x, obstacle_y, obstacle_size[0], obstacle_size[1])
 
 def check_collision(rect1, rect2):
-    """ Check if two rectangles collide. """
+    # 두 개의 직사각형이 충돌하는지 확인합니다.
     return rect1.colliderect(rect2)
 
 def check_self_collision(head, body):
-    """ Check if the snake's head collides with its own body. """
+    # 뱀의 머리가 자신의 몸과 충돌하는지 확인합니다.
     return head in body
+
+# 게임 변수 설정
+stage = 1
+target_food_count = 10
+food_count = 0 # 현재 먹은 먹이 개수
+
+def next_stage():
+    # 스테이지를 증가시키고 난이도를 올립니다.
+    global stage, target_food_count, FPS, snake_speed
+    stage += 1
+    target_food_count += 5
+    FPS += 2
+    snake_speed += 0.1
 
 # 게임 루프
 running = True
@@ -79,18 +92,30 @@ while running:
         if head_x < 0 or head_x >= screen_width or head_y < 0 or head_y >= screen_height:
             running = False
 
-        snake = [(head_x, head_y)] + snake[:-1]  # 뱀의 머리 이동, 꼬리 삭제
+        new_head = (head_x, head_y)
 
         # 먹이 먹기
         snake_head_rect = pygame.Rect(head_x, head_y, snake_block, snake_block)
         if obstacle_rect.colliderect(snake_head_rect):
-            snake.append(snake[-1])  # 뱀 길이 증가
+            # 먹이를 먹으면 뱀의 길이를 늘리고, 먹이 카운트 증가
+            snake.append(snake[-1])  # 기존의 꼬리를 복사하여 뱀의 길이 증가
+            food_count += 1
+            
+            if food_count >= target_food_count:
+                # 현재 스테이지를 완료하고 다음 스테이지로 이동
+                food_count = 0
+                next_stage()
+                
+            # 새로운 먹이 위치 설정
             obstacle_x = random.randint(0, screen_width - obstacle_size[0])
             obstacle_y = random.randint(0, screen_height - obstacle_size[1])
             obstacle_rect = pygame.Rect(obstacle_x, obstacle_y, obstacle_size[0], obstacle_size[1])
+        else:
+            # 먹이를 먹지 않았을 때만 꼬리 삭제
+            snake = [new_head] + snake[:-1]
 
         # 자기 충돌 처리
-        if check_self_collision((head_x, head_y), snake[1:]):
+        if check_self_collision(new_head, snake[1:]):
             running = False
 
     # 화면 채우기
@@ -102,6 +127,11 @@ while running:
 
     # 먹이 그리기
     screen.blit(obstacle_image, obstacle_rect)
+    
+    # 스테이지 정보 표시
+    font = pygame.font.Font(None, 36)
+    stage_text = font.render(f"Stage : {stage}", True, YELLOW)
+    screen.blit(stage_text, (10, 10))
 
     # 화면 업데이트
     pygame.display.flip()
