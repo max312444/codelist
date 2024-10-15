@@ -59,7 +59,7 @@ default_shoot_delay = 300
 shoot_delay = default_shoot_delay
 
 # 장애물 이미지 로드 및 설정
-obstacle_image = pygame.image.load("74xC.gif")
+obstacle_image = pygame.image.load("enemy1.png")
 obstacle_size = obstacle_image.get_rect().size
 obstacles = []
 
