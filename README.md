@@ -13,10 +13,3 @@
 
 ---
 
-## 💡 커밋 통계
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=max312444&show_icons=true&count_private=true&hide=prs&theme=highcontrast" />
-</p>
-
----
