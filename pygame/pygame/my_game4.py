@@ -26,7 +26,7 @@ def play_music():
 play_music()
 
 # 소리 파일 로드
-sound_fire = pygame.mixer.Sound("shot.mp3")
+sound_fire = pygame.mixer.Sound("shot.mp3" )
 sound_fire.set_volume(0.5)
 
 sound_hit = pygame.mixer.Sound("hit.mp3")
